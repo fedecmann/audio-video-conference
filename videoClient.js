@@ -84,53 +84,6 @@ $("#checkUsersBtn").click(function (e) {
 	send({ type: "users" });
 });
 
-$("#screenSharingBtn").click(function (e) {
-	if (navigator.userAgent.indexOf("Chrome") != -1) {
-		const EXTENSION_ID = 'fgjelceahkekhhhdafgbhinlijokelgf';
-
-		chrome.runtime.sendMessage(EXTENSION_ID, 'version', response => {
-			if (!response) {
-				console.log('No extension');
-				return;
-			}
-			console.log('Extension version: ', response.version);
-			const request = { sources: ['window', 'screen', 'tab'] };
-			chrome.runtime.sendMessage(EXTENSION_ID, request, response => {
-				if (response && response.type === 'success') {
-					navigator.mediaDevices.getUserMedia({
-						video: {
-							mandatory: {
-								chromeMediaSource: 'desktop',
-								chromeMediaSourceId: response.streamId
-							}
-						}
-					}).then(returnedStream => {
-						changeStream(returnedStream);
-					}).catch(err => {
-						console.error('Could not get stream: ', err);
-					});
-				} else {
-					console.error('Could not get stream');
-				}
-			});
-		});
-	}
-	if (navigator.userAgent.indexOf("Firefox") != -1) {
-		console.log("Firefox");
-		navigator.mediaDevices.getUserMedia({
-			video: {
-				mediaSource: 'window'
-			}
-		})
-			.then(returnedStream => {
-				changeStream(returnedStream);
-			})
-			.catch(err => {
-				console.error('Could not get stream: ', err);
-			});
-	}
-});
-
 $("#cameraSharingBtn").click(function (e) {
 	navigator.getUserMedia({ video: true, audio: true }, function (myStream) {
 		changeStream(myStream);
