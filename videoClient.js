@@ -442,7 +442,7 @@ function addStreamToVideo(videoId, stream) {
 	} else {
 		navigator.mediaDevices.getUserMedia({
 			audio: true, video: {
-				facingMode: 'enviroment'
+				facingMode: 'environment'
 			}
 		}).then(function (stream) {
 			$("#videoDiv").append('<div class="p-2 w-50 border">You<video controls muted id="localVideo" autoplay></video></div>');
