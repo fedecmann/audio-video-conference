@@ -65,7 +65,7 @@ var servers = {
 	"iceServers": [
 		{ "url": "stun:stun2.1.google.com:19302" },
 		{
-			urls: 'turn:turn.bistri.com:80',
+			url: 'turn:homeo@turn.bistri.com:80',
 			credential: 'homeo',
 			username: "homeo",
 		}]
