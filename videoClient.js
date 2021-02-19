@@ -202,6 +202,7 @@ function handleAccept(name) {
 	if (!peerConns.hasOwnProperty(name)) {
 		addVideoDiv(name);
 		$("#" + name + ".remoteVideo").parent().hide();
+		console.log(document);
 
 		peerConns[name] = new RTCPeerConnection(servers);
 
