@@ -71,10 +71,7 @@ var peerConns = {};
 var stream;
 
 // for browser compability
-navigator.getUserMedia = (navigator.getUserMedia ||
-	navigator.webkitGetUserMedia ||
-	navigator.mozGetUserMedia ||
-	navigator.msGetUserMedia);
+
 RTCPeerConnection = (RTCPeerConnection ||
 	webkitRTCPeerConnection ||
 	mozRTCPeerConnection ||
@@ -202,50 +199,6 @@ function onUsersRefresh(users) {
 function send(message) {
 	conn.send(JSON.stringify(message));
 };
-
-// when we got a message from a signaling server
-// conn.onmessage = function (msg) {
-// 	console.log("Got message", msg.data);
-
-// 	var data = JSON.parse(msg.data);
-
-// 	switch (data.type) {
-// 		case "users":
-// 			onUsersRefresh(data.users);
-// 			break;
-// 		case "login":
-// 			handleLogin(data.success);
-// 			break;
-// 		case "message":
-// 			handleMessage(data.message, data.sender, data.channel);
-// 			break;
-// 		// when somebody wants to call us
-// 		case "offer":
-// 			handleOffer(data.offer, data.name);
-// 			break;
-// 		case "answer":
-// 			handleAnswer(data.answer, data.name);
-// 			break;
-// 		case "permission":
-// 			handlePermission(data.name);
-// 			break;
-// 		case "accept":
-// 			handleAccept(data.name);
-// 			break;
-// 		case "decline":
-// 			handleDecline(data.name);
-// 			break;
-// 		// when a remote peer sends an ice candidate to us
-// 		case "candidate":
-// 			handleCandidate(data.candidate, data.name);
-// 			break;
-// 		case "leave":
-// 			handleLeave(data.name);
-// 			break;
-// 		default:
-// 			break;
-// 	}
-// };
 
 function handleAccept(name) {
 	if (!peerConns.hasOwnProperty(name)) {
@@ -378,19 +331,91 @@ function handleLogin(success) {
 		$("#callPage").css("display", "block");
 		resize();
 
-		// getting local video stream
-		navigator.getUserMedia({ video: true, audio: true }, function (myStream) {
-			stream = myStream;
 
-			$("#videoDiv").append('<div class="p-2 w-50 border">You<video controls muted id="localVideo" autoplay></video></div>');
-			// displaying local video stream on the page
-			$("#localVideo").attr("src", window.URL.createObjectURL(stream));
-			$("#localVideo")[0].load();
-		}, function (error) {
-			console.log(error);
-		});
+		// displaying local video stream on the page
+
+		if (navigator.mediaDevices === undefined) {
+
+			navigator.getUserMedia = (navigator.getUserMedia ||
+				navigator.webkitGetUserMedia ||
+				navigator.mozGetUserMedia ||
+				navigator.msGetUserMedia);
+
+			console.log(navigator);
+			// getting local video stream
+			navigator.getUserMedia({ video: true, audio: true }, function (myStream) {
+				stream = myStream;
+
+				$("#videoDiv").append('<div class="p-2 w-50 border">You<video controls id="localVideo" autoplay muted></video></div>');
+				// displaying local video stream on the page
+
+				var attr = $("#localVideo").attr('srcObject');
+				console.log(this);
+				console.log(attr);
+				console.log($("#localVideo"));
+				console.log(typeof myStream);
+				console.log(myStream);
+
+				if (typeof attr !== typeof undefined && attr !== false) {
+					try {
+						$("#localVideo").srcObject(stream);
+					} catch (err) {
+						console.log(err);
+						$("#localVideo").attr("src", window.URL.createObjectURL(stream));
+					}
+				} else {
+					//$("#localVideo")[0].setAttribute("srcObject",stream);
+					document.getElementById("localVideo").srcObject = stream;
+					console.log(document.getElementById("localVideo"));
+					console.log($("#localVideo"));
+					console.log($("#localVideo")[0]);
+				}
+
+				$("#localVideo")[0].load();
+				console.log($("#localVideo"));
+				//$("#localVideo")[0].play();
+			}, function (error) {
+				console.log(error);
+			});
+
+		}
+
+		// if (navigator.mediaDevices.getUserMedia === undefined) {
+		// 	navigator.mediaDevices.getUserMedia = function (constraints) {
+
+		// 		var getUserMedia = navigator.getUserMedia;
+
+		// 		if (!getUserMedia) {
+		// 			return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
+		// 		}
+
+		// 		return new Promise(function (resolve, reject) {
+		// 			getUserMedia.call(navigator, constraints, resolve, reject);
+		// 		});
+		// 	}
+		// }
+		else {
+			navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+				.then(function (stream) {
+					$("#videoDiv").append('<div class="p-2 w-50 border">You<video controls muted id="localVideo" autoplay></video></div>');
+					var video = document.getElementById('localVideo');
+					// Older browsers may not have srcObject
+					if ("srcObject" in video) {
+						video.srcObject = stream;
+					} else {
+						// Avoid using this in new browsers, as it is going away.
+						video.src = window.URL.createObjectURL(stream);
+					}
+					video.onloadedmetadata = function (e) {
+						video.play();
+					};
+				})
+				.catch(function (err) {
+					console.log(err.name + ": " + err.message);
+				});
+		}
 	}
-};
+}
 
 function handleMessage(message, sender, channel) {
 	if ($("#channelList > :contains(" + channel + ")").length == 0) {
