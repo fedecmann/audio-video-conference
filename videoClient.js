@@ -3,9 +3,7 @@ var modalIndex = 0; // for modals to have unique id's
 var activeChannel = "g"; // for chat
 var HOST = location.origin.replace(/^http/, 'ws')
 // connecting to our signaling server
-var conn; // = new WebSocket('wss://' + window.location.hostname + ':3000');
-
-conn = new WebSocket(HOST);
+var conn = new WebSocket(HOST);
 
 conn.onopen = function () {
 	console.log("Connected to the signaling server");
@@ -380,23 +378,10 @@ function handleLogin(success) {
 
 		}
 
-		// if (navigator.mediaDevices.getUserMedia === undefined) {
-		// 	navigator.mediaDevices.getUserMedia = function (constraints) {
-
-		// 		var getUserMedia = navigator.getUserMedia;
-
-		// 		if (!getUserMedia) {
-		// 			return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
-		// 		}
-
-		// 		return new Promise(function (resolve, reject) {
-		// 			getUserMedia.call(navigator, constraints, resolve, reject);
-		// 		});
-		// 	}
-		// }
 		else {
 			navigator.mediaDevices.getUserMedia({ audio: true, video: true })
-				.then(function (stream) {
+				.then(function (myStream) {
+					stream = myStream;
 					$("#videoDiv").append('<div class="p-2 w-50 border">You<video controls muted id="localVideo" autoplay></video></div>');
 					var video = document.getElementById('localVideo');
 					// Older browsers may not have srcObject
@@ -414,6 +399,62 @@ function handleLogin(success) {
 					console.log(err.name + ": " + err.message);
 				});
 		}
+	}
+}
+
+function addStreamToVideo(videoId, stream) {
+	var videoIdJQuery = '#' + videoId;
+	if (navigator.mediaDevices === undefined) {
+
+		navigator.getUserMedia = (navigator.getUserMedia ||
+			navigator.webkitGetUserMedia ||
+			navigator.mozGetUserMedia ||
+			navigator.msGetUserMedia);
+
+		// getting local video stream
+		navigator.getUserMedia({ video: true, audio: true }, function (myStream) {
+			stream = myStream;
+
+			$("#videoDiv").append('<div class="p-2 w-50 border">You<video controls id="localVideo" autoplay muted></video></div>');
+			// displaying local video stream on the page
+
+			var attr = $(videoIdJQuery).attr('srcObject');
+
+			if (typeof attr !== typeof undefined && attr !== false) {
+				try {
+					$(videoIdJQuery).srcObject(stream);
+				} catch (err) {
+					console.log(err);
+					$(videoIdJQuery).attr("src", window.URL.createObjectURL(stream));
+				}
+			} else {
+				//$("#localVideo")[0].setAttribute("srcObject",stream);
+				document.getElementById(videoId).srcObject = stream;
+			}
+
+			$(videoIdJQuery)[0].load();
+		}, function (error) {
+			console.log(error);
+		});
+	} else {
+		navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+			.then(function (stream) {
+				$("#videoDiv").append('<div class="p-2 w-50 border">You<video controls muted id="localVideo" autoplay></video></div>');
+				var video = document.getElementById(videoId);
+				// Older browsers may not have srcObject
+				if ("srcObject" in video) {
+					video.srcObject = stream;
+				} else {
+					// Avoid using this in new browsers, as it is going away.
+					video.src = window.URL.createObjectURL(stream);
+				}
+				video.onloadedmetadata = function (e) {
+					video.play();
+				};
+			})
+			.catch(function (err) {
+				console.log(err.name + ": " + err.message);
+			});
 	}
 }
 
