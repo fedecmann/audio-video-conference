@@ -210,9 +210,11 @@ function handleAccept(name) {
 
 		// when a remote user adds stream to the peer connection, we display it
 		peerConns[name].onaddstream = function (e) {
-			var video = $("#" + name + ".remoteVideo");
-			video.attr("src", window.URL.createObjectURL(e.stream));
-			video[0].load();
+			//var video = $("#" + name + ".remoteVideo");
+			var video = document.getElementById(name + ".remoteVideo");
+			video.srcObject = e.stream;
+			//video.attr("src", window.URL.createObjectURL(e.stream));
+			//video[0].load();
 			$("#" + name + ".remoteVideo").parent().show();
 		};
 
