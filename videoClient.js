@@ -440,21 +440,24 @@ function addStreamToVideo(videoId, stream) {
 			console.log(error);
 		});
 	} else {
-		navigator.mediaDevices.getUserMedia({ audio: true, video: true })
-			.then(function (stream) {
-				$("#videoDiv").append('<div class="p-2 w-50 border">You<video controls muted id="localVideo" autoplay></video></div>');
-				var video = document.getElementById(videoId);
-				// Older browsers may not have srcObject
-				if ("srcObject" in video) {
-					video.srcObject = stream;
-				} else {
-					// Avoid using this in new browsers, as it is going away.
-					video.src = window.URL.createObjectURL(stream);
-				}
-				video.onloadedmetadata = function (e) {
-					video.play();
-				};
-			})
+		navigator.mediaDevices.getUserMedia({
+			audio: true, video: {
+				facingMode = 'enviroment'
+			}
+		}).then(function (stream) {
+			$("#videoDiv").append('<div class="p-2 w-50 border">You<video controls muted id="localVideo" autoplay></video></div>');
+			var video = document.getElementById(videoId);
+			// Older browsers may not have srcObject
+			if ("srcObject" in video) {
+				video.srcObject = stream;
+			} else {
+				// Avoid using this in new browsers, as it is going away.
+				video.src = window.URL.createObjectURL(stream);
+			}
+			video.onloadedmetadata = function (e) {
+				video.play();
+			};
+		})
 			.catch(function (err) {
 				console.log(err.name + ": " + err.message);
 			});
