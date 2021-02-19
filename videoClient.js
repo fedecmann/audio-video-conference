@@ -264,7 +264,6 @@ function handleOffer(offer, name) {
 		peerConns[name].onaddstream = function (e) {
 			var video = document.getElementById(name);
 			video.srcObject = stream;
-			video[0].load();
 			$("#" + name + ".remoteVideo").parent().show();
 		};
 
