@@ -64,7 +64,7 @@ console.log(conn);
 var servers = {
 	"iceServers": [
 		//	{ "url": "stun:stun2.1.google.com:19302" },
-		{ url: "stun:stun.internetcalls.com" }
+		{ urls: "stun:stun.internetcalls.com" }
 	]
 };
 
@@ -81,27 +81,6 @@ RTCPeerConnection = (RTCPeerConnection ||
 $("#checkUsersBtn").click(function (e) {
 	send({ type: "users" });
 });
-
-$("#cameraSharingBtn").click(function (e) {
-	navigator.getUserMedia({ video: true, audio: true }, function (myStream) {
-		changeStream(myStream);
-
-	}, function (error) {
-		console.log(error);
-	});
-});
-
-function changeStream(newStream) {
-	$("#localVideo").attr("src", window.URL.createObjectURL(newStream));
-	$("#localVideo")[0].load();
-	for (var i in peerConns) {
-		console.log('peerConns: ' + i);
-		if (navigator.userAgent.indexOf("Chrome") != -1) peerConns[i].removeStream(stream);
-		peerConns[i].addStream(newStream);
-		handleAccept(i);
-	}
-	stream = newStream;
-}
 
 function addVideoDiv(name) {
 	$("#" + name + ".remoteVideo").parent().remove();
@@ -192,10 +171,6 @@ function onUsersRefresh(users) {
 	});
 }
 
-// conn.onerror = function (err) {
-// 	console.log("Got error", err);
-// };
-
 // alias for sending JSON encoded messages
 function send(message) {
 	conn.send(JSON.stringify(message));
@@ -205,7 +180,7 @@ function handleAccept(name) {
 	if (!peerConns.hasOwnProperty(name)) {
 		addVideoDiv(name);
 		//$("#" + name + ".remoteVideo").parent().hide();
-		console.log(document);
+		console.log(stream);
 
 		peerConns[name] = new RTCPeerConnection(servers);
 
