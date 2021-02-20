@@ -64,7 +64,7 @@ console.log(conn);
 var servers = {
 	"iceServers": [
 		//	{ "url": "stun:stun2.1.google.com:19302" },
-		{ url: "stun.internetcalls.com" }
+		{ url: "stun:stun.internetcalls.com" }
 	]
 };
 
