@@ -509,6 +509,7 @@ function handleAnswer(answer, name) {
 
 // when we got an ice candidate from a remote user
 function handleCandidate(candidate, name) {
+	console.log(candidate, name);
 	if (!peerConns.hasOwnProperty(name)) peerConns[name] = new RTCPeerConnection(servers);
 	peerConns[name].addIceCandidate(new RTCIceCandidate(candidate));
 };
