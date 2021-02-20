@@ -63,8 +63,8 @@ console.log(conn);
 // using Google public stun server
 var servers = {
 	"iceServers": [
-		//	{ "url": "stun:stun2.1.google.com:19302" },
-		{ urls: "stun:stun.internetcalls.com" }
+		{ urls: "stun:stun2.1.google.com:19302" },
+		//{ urls: "stun:stun.internetcalls.com" }
 	]
 };
 
