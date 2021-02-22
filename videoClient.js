@@ -181,6 +181,7 @@ function handleAccept(name) {
 		console.log(stream);
 
 		peerConns[name] = new RTCPeerConnection(servers);
+		console.log(peerConns[name]);
 
 		// setup stream listening
 		if (stream) {
