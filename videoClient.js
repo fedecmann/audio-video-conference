@@ -59,12 +59,10 @@ conn.onmessage = function (msg) {
 console.log(conn);
 
 
-
 // using Google public stun server
 var servers = {
 	"iceServers": [
 		{ urls: "stun:stun2.1.google.com:19302" },
-		//{ urls: "stun:stun.internetcalls.com" }
 	]
 };
 
@@ -284,7 +282,6 @@ $("#loginForm").submit(function (e) {
 	});
 });
 
-// $("#loginForm :text").popover("disable");
 
 function handleLogin(success) {
 	if (success === false) {
@@ -328,11 +325,6 @@ function handleLogin(success) {
 				// displaying local video stream on the page
 
 				var attr = $("#localVideo").attr('srcObject');
-				console.log(this);
-				console.log(attr);
-				console.log($("#localVideo"));
-				console.log(typeof myStream);
-				console.log(myStream);
 
 				if (typeof attr !== typeof undefined && attr !== false) {
 					try {
@@ -344,13 +336,9 @@ function handleLogin(success) {
 				} else {
 					//$("#localVideo")[0].setAttribute("srcObject",stream);
 					document.getElementById("localVideo").srcObject = stream;
-					console.log(document.getElementById("localVideo"));
-					console.log($("#localVideo"));
-					console.log($("#localVideo")[0]);
 				}
 
 				$("#localVideo")[0].load();
-				console.log($("#localVideo"));
 				//$("#localVideo")[0].play();
 			}, function (error) {
 				console.log(error);
