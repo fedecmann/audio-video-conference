@@ -4,7 +4,6 @@ function load(file, appendTo, callback) {
 	xhttp.onreadystatechange = function () {
 		if (this.readyState == 4) {
 			if (this.status == 200) {
-				console.log(this);
 				appendTo.append(this.responseText);
 				callback();
 			}
