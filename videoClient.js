@@ -228,6 +228,7 @@ function handleOffer(offer, name) {
 		$("#" + name + ".remoteVideo").parent().hide();
 
 		peerConns[name] = new RTCPeerConnection(servers);
+		console.log(peerConns[name]);
 
 		// setup stream listening
 		peerConns[name].addStream(stream);
