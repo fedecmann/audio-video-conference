@@ -183,7 +183,9 @@ function handleAccept(name) {
 		peerConns[name] = new RTCPeerConnection(servers);
 
 		// setup stream listening
-		peerConns[name].addStream(stream);
+		if (stream) {
+			peerConns[name].addStream(stream);
+		}
 
 		// when a remote user adds stream to the peer connection, we display it
 		peerConns[name].onaddstream = function (e) {
