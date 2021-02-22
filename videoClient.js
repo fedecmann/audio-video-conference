@@ -503,8 +503,10 @@ function handleAnswer(answer, name) {
 function handleCandidate(candidate, name) {
 	console.log(candidate, name);
 	if (!peerConns.hasOwnProperty(name)) peerConns[name] = new RTCPeerConnection(servers);
-	peerConns[name].addIceCandidate(new RTCIceCandidate(candidate));
-};
+	if (candidate) peerConns[name].addIceCandidate(new RTCIceCandidate(candidate));
+}
+
+
 
 function handleLeave(name) {
 	endPeerConn(name);
