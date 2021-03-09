@@ -569,68 +569,20 @@ var switchFlashlight = document.getElementById("switchFlashlight");
 
 var imageCapture;
 
+imageCapture = new ImageCapture(stream.getVideoTracks()[0]);
 
-// video streaming
-navigator.mediaDevices
-	.getUserMedia({
-		audio: false,
-		video: {
-			width: {
-				ideal: 1280
-			},
-			height: {
-				ideal: 1024,
-			},
-			facingMode: 'environment',
-			// advanced: {
-			//   torch: true
-			// }
-		},
-	})
-	.then((stream) => {
-		video.srcObject = stream;
-
-		const track = stream.getVideoTracks()[0];
-
-		imageCapture = new ImageCapture(track);
-
-		const photoCapabilities = imageCapture.getPhotoCapabilities()
-			.then(() => {
-				const btn = document.getElementById("switchFlashlight");
-				btn.addEventListener('click', () => {
-					let torchState = photoCapabilities.torch;
-					track.applyConstraints({
-						advanced: [{
-							torch: !torchState
-						}]
-					})
-				})
+const photoCapabilities = imageCapture.getPhotoCapabilities()
+	.then(() => {
+		const btn = document.getElementById("switchFlashlight");
+		btn.addEventListener('click', () => {
+			let torchState = photoCapabilities.torch;
+			track.applyConstraints({
+				advanced: [{
+					torch: !torchState
+				}]
 			})
-
-		video.play();
-	})
-	.catch((err) => {
-		console.log("An error occurred: " + err);
+		})
 	});
-
-// method to avoid blocking until video begins to flow
-video.addEventListener(
-	"canplay",
-	() => {
-		if (!streaming) {
-			height = video.videoHeight / (video.videoWidth / width);
-
-			video.setAttribute("width", width);
-			video.setAttribute("height", height);
-
-			canvas.setAttribute("width", width);
-			canvas.setAttribute("height", height);
-
-			streaming = true;
-		}
-	},
-	false
-);
 
 // handle click on button
 
