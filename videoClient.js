@@ -328,7 +328,20 @@ function handleLogin(success) {
 
 			console.log(navigator);
 			// getting local video stream
-			navigator.getUserMedia({ video: true, audio: true }, function (myStream) {
+			navigator.getUserMedia({
+				video: {
+					width: {
+						ideal: 1280
+					},
+					height: {
+						ideal: 1024,
+					},
+					facingMode: 'environment',
+					// advanced: {
+					//   torch: true
+					// }
+				}, audio: true
+			}, function (myStream) {
 				stream = myStream;
 
 				$("#videoDiv").append('<div class="p-2 w-50 border">You<video controls id="localVideo" autoplay muted></video></div>');
