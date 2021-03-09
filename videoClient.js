@@ -556,12 +556,6 @@ function showPosition(position) {
 //------------------------------------------------------------------------------------------------------
 //photos
 
-var width = 320;
-var height = 0;
-
-var streaming = false;
-
-var video = document.getElementById("video");
 var canvas = document.getElementById("canvas");
 var photo = document.getElementById("photo");
 var startButton = document.getElementById("startButton");
@@ -573,6 +567,7 @@ imageCapture = new ImageCapture(stream.getVideoTracks()[0]);
 
 const photoCapabilities = imageCapture.getPhotoCapabilities()
 	.then(() => {
+		console.log('photoCap');
 		const btn = document.getElementById("switchFlashlight");
 		btn.addEventListener('click', () => {
 			let torchState = photoCapabilities.torch;
@@ -610,7 +605,7 @@ function clearPhoto() {
 
 // taking the photo
 function takePicture() {
-
+	console('takePicture');
 	imageCapture.takePhoto()
 		.then(blob => createImageBitmap(blob))
 		.then(imageBitmap => {
