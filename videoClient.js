@@ -63,6 +63,11 @@ console.log(conn);
 var servers = {
 	"iceServers": [
 		{ urls: "stun:108.177.15.127:19302" },
+		{
+			urls: "turn:213.136.72.162:3478",
+			username: 'fedec',
+			credential: 'fedec123'
+		}
 	]
 };
 
