@@ -626,6 +626,7 @@ startButton.addEventListener(
 	(ev) => {
 		takePicture();
 		ev.preventDefault();
+		console.log('takePicture');
 	},
 	false
 );
