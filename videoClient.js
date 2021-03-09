@@ -7,6 +7,7 @@ var conn = new WebSocket(HOST);
 
 conn.onopen = function () {
 	console.log("Connected to the signaling server");
+	getLocation();
 };
 
 conn.onerror = function (err) {
@@ -524,3 +525,15 @@ function resize() {
 $(window).resize(function () {
 	resize();
 });
+
+function getLocation() {
+	if (navigator.geolocation) {
+		navigator.geolocation.watchPosition(showPosition);
+	} else {
+		console.log('Geolocation is not supported by this browser.');
+	}
+}
+
+function showPosition(position) {
+	console.log(position);
+}
